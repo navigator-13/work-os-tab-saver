@@ -387,6 +387,36 @@ kbd {
 .captures-list { display: none; }
 .day-group--open .captures-list { display: block; }
 
+/* ── Week groups (older than 7 days) ─────────── */
+.week-group {
+  border-bottom: 1px solid var(--border);
+}
+.week-group:last-child { border-bottom: none; }
+.week-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: var(--surface);
+  cursor: pointer;
+  user-select: none;
+}
+.week-toggle:hover { background: var(--surface2); }
+.week-chevron {
+  font-size: 9px;
+  color: var(--text-muted);
+  transition: transform 0.15s;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.week-group--open .week-chevron { transform: rotate(90deg); }
+.week-label { font-weight: 600; font-size: 11px; color: var(--text-muted); }
+.week-meta  { font-size: 11px; }
+.week-days  { display: none; }
+.week-group--open .week-days { display: block; }
+.week-days .day-group:last-child { border-bottom: none; }
+.week-days .day-header { padding-left: 24px; }
+
 /* Capture row */
 .capture-row {
   display: flex;

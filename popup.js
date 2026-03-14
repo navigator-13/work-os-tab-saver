@@ -9,6 +9,7 @@ let activeFilter       = "all";   // "all" | "work" | "personal"
 let activeRestoreDay   = null;
 let activeRestoreCap   = null;    // currently selected capture in modal
 const openDayIds       = new Set(); // days explicitly opened by user
+const openWeekIds      = new Set(); // week keys explicitly opened by user
 
 // ── Boot ─────────────────────────────────────
 document.addEventListener("DOMContentLoaded", async () => {
@@ -37,7 +38,7 @@ function renderDays() {
   const empty = document.getElementById("empty-state");
   const query = document.getElementById("search-input").value.toLowerCase();
 
-  Array.from(list.querySelectorAll(".day-group")).forEach((el) => el.remove());
+  Array.from(list.querySelectorAll(".day-group, .week-group")).forEach((el) => el.remove());
 
   let days = allDays;
 
@@ -74,7 +75,24 @@ function renderDays() {
   }
   empty.style.display = "none";
 
-  days.forEach((day) => list.appendChild(buildDayGroup(day, query)));
+  // Split into recent (≤7 days) and older
+  const cutoff    = new Date();
+  cutoff.setDate(cutoff.getDate() - 7);
+  const cutoffStr = cutoff.toISOString().slice(0, 10);
+
+  const recentDays = days.filter((d) => d.date >= cutoffStr);
+  const olderDays  = days.filter((d) => d.date <  cutoffStr);
+
+  recentDays.forEach((day) => list.appendChild(buildDayGroup(day, query)));
+
+  // Group older days by week
+  const weekMap = new Map();
+  olderDays.forEach((day) => {
+    const key = getWeekKey(day.date);
+    if (!weekMap.has(key)) weekMap.set(key, []);
+    weekMap.get(key).push(day);
+  });
+  weekMap.forEach((wDays, key) => list.appendChild(buildWeekGroup(key, wDays, query)));
 }
 
 function buildDayGroup(day, query) {
@@ -104,6 +122,52 @@ function buildDayGroup(day, query) {
       ${day.captures.map((cap, ci) => buildCaptureRow(cap, day, ci)).join("")}
     </div>
   `;
+  return group;
+}
+
+function getWeekKey(dateStr) {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const date      = new Date(y, m - 1, d);
+  const monday    = new Date(date);
+  monday.setDate(date.getDate() - ((date.getDay() + 6) % 7));
+  return monday.toISOString().slice(0, 10);
+}
+
+function formatWeekLabel(weekKey) {
+  const [y, m, d] = weekKey.split("-").map(Number);
+  const monday    = new Date(y, m - 1, d);
+  const sunday    = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  const fmt = { month: "short", day: "numeric" };
+  return `${monday.toLocaleDateString("en-US", fmt)} – ${sunday.toLocaleDateString("en-US", fmt)}`;
+}
+
+function buildWeekGroup(weekKey, days, query) {
+  const isOpen = openWeekIds.has(weekKey) || !!query;
+
+  const totalCaptures = days.reduce((s, d) => s + d.captures.length, 0);
+  const totalTabs     = days.reduce(
+    (s, d) => s + d.captures.reduce((cs, c) => cs + c.windows.reduce((ws, w) => ws + w.tabs.length, 0), 0), 0
+  );
+
+  const group = document.createElement("div");
+  group.className    = `week-group${isOpen ? " week-group--open" : ""}`;
+  group.dataset.week = weekKey;
+
+  const header = document.createElement("div");
+  header.className = "week-header week-toggle";
+  header.innerHTML = `
+    <span class="week-chevron">▶</span>
+    <span class="week-label">${formatWeekLabel(weekKey)}</span>
+    <span class="week-meta muted">${days.length} day${days.length !== 1 ? "s" : ""} · ${totalCaptures} captures · ${totalTabs} tabs</span>
+  `;
+
+  const content = document.createElement("div");
+  content.className = "week-days";
+  days.forEach((day) => content.appendChild(buildDayGroup(day, query)));
+
+  group.appendChild(header);
+  group.appendChild(content);
   return group;
 }
 
@@ -200,6 +264,20 @@ function bindEvents() {
 
   // Day list delegation
   document.getElementById("days-list").addEventListener("click", async (e) => {
+    // Toggle week open/closed
+    const weekHeader = e.target.closest(".week-toggle");
+    if (weekHeader) {
+      const group = weekHeader.closest(".week-group");
+      const key   = group.dataset.week;
+      if (openWeekIds.has(key)) {
+        openWeekIds.delete(key);
+        group.classList.remove("week-group--open");
+      } else {
+        openWeekIds.add(key);
+        group.classList.add("week-group--open");
+      }
+      return;
+    }
     // Toggle day open/closed (header click, not buttons)
     const header = e.target.closest(".day-toggle");
     if (header && !e.target.closest("button") && !e.target.closest(".chip-selectable")) {
