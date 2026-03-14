@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Work OS Tab Saver</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="popup-body">
+
+  <header class="popup-header">
+    <div class="header-left">
+      <span class="logo">⬡</span>
+      <span class="app-name">Work OS Tab Saver</span>
+    </div>
+    <button id="btn-capture" class="btn-primary" title="Capture all windows (⌘⇧S)">+ Capture</button>
+  </header>
+
+  <!-- Filter tabs -->
+  <div class="filter-row">
+    <button class="filter-btn active" data-filter="all">All <kbd>A</kbd></button>
+    <button class="filter-btn" data-filter="work">💼 Work <kbd>W</kbd></button>
+    <button class="filter-btn" data-filter="personal">🏠 Personal <kbd>P</kbd></button>
+    <div class="filter-spacer"></div>
+    <label class="btn-ghost btn-sm import-label" for="import-file-input">↑ Import</label>
+    <input id="import-file-input" type="file" accept=".json" style="display:none" />
+  </div>
+
+  <!-- Search -->
+  <div class="search-row">
+    <input id="search-input" type="text" placeholder="Search days, captures, labels…" autocomplete="off" />
+  </div>
+
+  <!-- Day-grouped list -->
+  <div id="days-list" class="days-list">
+    <div class="empty-state" id="empty-state">
+      <p>No saved sessions yet.</p>
+      <p class="muted">Press <kbd>⌘⇧S</kbd> or click <strong>+ Capture</strong></p>
+    </div>
+  </div>
+
+  <!-- Restore modal -->
+  <div id="restore-modal" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title" id="modal-title"></div>
+          <div class="modal-subtitle muted" id="modal-subtitle"></div>
+        </div>
+        <button id="modal-close" class="btn-icon">✕</button>
+      </div>
+
+      <!-- Capture selector (tabs within modal) -->
+      <div class="modal-capture-tabs" id="modal-capture-tabs"></div>
+
+      <!-- Windows for selected capture -->
+      <div class="modal-windows-list" id="modal-windows-list"></div>
+
+      <div class="modal-footer">
+        <button id="modal-select-all" class="btn-ghost btn-sm">Select all</button>
+        <button id="modal-restore-btn" class="btn-primary">Restore selected</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="import-status" class="import-toast hidden"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

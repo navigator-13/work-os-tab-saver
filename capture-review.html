@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Review Capture · Work OS Tab Saver</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="review-body">
+  <div class="review-container">
+
+    <header class="review-header">
+      <div class="header-left">
+        <span class="logo">⬡</span>
+        <div>
+          <div class="app-name">Work OS Tab Saver</div>
+          <div class="review-subtitle">Review captured windows before saving</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <button id="btn-discard" class="btn-ghost">Discard</button>
+        <button id="btn-save" class="btn-primary">Save capture</button>
+      </div>
+    </header>
+
+    <!-- Capture meta row: label + context toggle -->
+    <div class="capture-meta-row">
+      <div class="field-group">
+        <label class="field-label" for="capture-label-input">Capture label</label>
+        <input
+          id="capture-label-input"
+          class="text-input"
+          type="text"
+          placeholder="e.g. Morning, Post-lunch, EOD…"
+          autocomplete="off"
+        />
+      </div>
+
+    </div>
+
+    <!-- Windows list -->
+    <div id="windows-list" class="windows-list">
+      <div class="loading" id="loading-msg">Loading captured windows…</div>
+    </div>
+
+  </div>
+  <script src="capture-review.js"></script>
+</body>
+</html>

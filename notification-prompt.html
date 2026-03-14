@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Work OS · Session Prompt</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="prompt-body">
+  <div class="prompt-container">
+
+    <div class="prompt-logo">⬡</div>
+
+    <!-- Morning restore prompt -->
+    <div id="prompt-morning" class="prompt-card hidden">
+      <h1 class="prompt-title">Resume your work session?</h1>
+      <div class="prompt-session-info" id="morning-session-info">
+        <!-- Populated by JS -->
+      </div>
+      <div class="prompt-actions">
+        <button id="btn-restore" class="btn-primary btn-lg">
+          Restore session
+          <kbd>R</kbd>
+        </button>
+        <button id="btn-snooze" class="btn-ghost btn-lg">
+          Snooze 30 min
+          <kbd>S</kbd>
+        </button>
+        <button id="btn-dismiss-morning" class="btn-text">
+          Dismiss for today
+          <kbd>D</kbd>
+        </button>
+      </div>
+      <p class="prompt-hint muted">Keyboard shortcuts work when this tab is focused</p>
+    </div>
+
+    <!-- EOD capture prompt -->
+    <div id="prompt-eod" class="prompt-card hidden">
+      <h1 class="prompt-title">End of day — save your session?</h1>
+      <p class="prompt-desc muted">Capture a snapshot of your open windows before you close up.</p>
+      <div class="prompt-actions">
+        <button id="btn-capture-eod" class="btn-primary btn-lg">
+          Capture now
+          <kbd>C</kbd>
+        </button>
+        <button id="btn-snooze-eod" class="btn-ghost btn-lg">
+          Snooze 30 min
+          <kbd>S</kbd>
+        </button>
+        <button id="btn-dismiss-eod" class="btn-text">
+          Dismiss for today
+          <kbd>D</kbd>
+        </button>
+      </div>
+      <p class="prompt-hint muted">Keyboard shortcuts work when this tab is focused</p>
+    </div>
+
+  </div>
+  <script src="notification-prompt.js"></script>
+</body>
+</html>

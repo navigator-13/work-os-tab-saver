@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "Work OS Tab Saver",
+  "version": "2.0.0",
+  "description": "Capture, label, and restore browser sessions for Work OS",
+
+  "permissions": [
+    "tabs",
+    "tabGroups",
+    "windows",
+    "storage",
+    "downloads",
+    "scripting",
+    "alarms",
+    "notifications"
+  ],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16":  "icons/icon16.png",
+      "48":  "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "Work OS Tab Saver"
+  },
+
+  "commands": {
+    "capture-session": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S",
+        "mac":     "Command+Shift+S"
+      },
+      "description": "Capture all open windows and tabs"
+    }
+  },
+
+  "icons": {
+    "16":  "icons/icon16.png",
+    "48":  "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
